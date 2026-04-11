@@ -36,6 +36,10 @@ app.addHook("onRequest", async (request, reply) => {
   const requestId = (request.headers["x-request-id"] as string) || randomUUID();
   request.id = requestId;
   (request as any).startTime = process.hrtime.bigint();
+  const pathname = request.raw.url?.split("?")[0];
+  if (pathname === "/health") {
+    return;
+  }
   const apiKey = request.headers["x-api-key"] as string | undefined;
   if (!apiKey || !env.apiKeys.includes(apiKey)) {
     reply.code(401).send({ error: "Unauthorized" });

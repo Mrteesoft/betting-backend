@@ -21,7 +21,8 @@ App listens on `localhost:3000`, Redis on `localhost:6379`.
 
 ## Environment Variables
 - `PORT` (default 3000)
-- `REDIS_URL` (e.g., `redis://redis:6379`)
+- `REDIS_URL` (e.g., `redis://redis:6379` locally, or your managed Redis / Render Key Value internal URL in production)
+- `REDIS_TLS_URL` optional fallback for providers that expose a dedicated TLS URL such as `rediss://...`
 - `API_KEYS` comma-separated list of allowed API keys
 - `RATE_LIMIT_PER_MINUTE` per API key (default 120)
 - `CONTEXT_CACHE_TTL_MS` LRU cache TTL for context-map (default 60000)
@@ -40,8 +41,14 @@ App listens on `localhost:3000`, Redis on `localhost:6379`.
 - `HIGHLIGHTLY_FOOTBALL_TIMEOUT_MS` outbound request timeout in milliseconds (default `15000`)
 - Legacy `API_FOOTBALL_*` variables are still accepted as fallbacks.
 
+## Render Deployment
+- Do not deploy with the local default `redis://localhost:6379`. In production, the server now fails fast if `REDIS_URL` is missing or still points to localhost.
+- Provision a managed Redis / Render Key Value instance and set `REDIS_URL` to its internal connection string.
+- If your provider only gives you a TLS URL, set `REDIS_TLS_URL=rediss://...` instead.
+- `GET /health` is intentionally public so Render health checks can succeed without an API key.
+
 ## Endpoints
-All requests require header `x-api-key`.
+All application requests require header `x-api-key`. `GET /health` is public for platform health checks.
 
 ### POST /v1/otp/sync-selections
 Apply a single market to many matches, respecting locks and context-map.

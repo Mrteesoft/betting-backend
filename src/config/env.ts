@@ -1,12 +1,14 @@
 import { z } from "zod";
 import { loadLocalEnv } from "./loadEnv";
+import { resolveRedisUrl } from "./redisConfig";
 
 loadLocalEnv();
 
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.string().default("3000"),
-  REDIS_URL: z.string().default("redis://localhost:6379"),
+  REDIS_URL: z.string().optional(),
+  REDIS_TLS_URL: z.string().optional(),
   API_KEYS: z.string().default("local-dev-key"),
   RATE_LIMIT_PER_MINUTE: z.string().default("120"),
   CONTEXT_CACHE_TTL_MS: z.string().default("60000"),
@@ -38,7 +40,11 @@ const parsed = envSchema.parse(process.env);
 export const env = {
   nodeEnv: parsed.NODE_ENV,
   port: Number(parsed.PORT),
-  redisUrl: parsed.REDIS_URL,
+  redisUrl: resolveRedisUrl({
+    nodeEnv: parsed.NODE_ENV,
+    redisUrl: parsed.REDIS_URL,
+    redisTlsUrl: parsed.REDIS_TLS_URL
+  }),
   apiKeys: parsed.API_KEYS.split(",").map((s) => s.trim()).filter(Boolean),
   rateLimitPerMinute: Number(parsed.RATE_LIMIT_PER_MINUTE),
   contextCacheTtlMs: Number(parsed.CONTEXT_CACHE_TTL_MS),

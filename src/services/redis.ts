@@ -1,11 +1,18 @@
-import Redis, { Redis as RedisClient } from "ioredis";
+import Redis, { Redis as RedisClient, RedisOptions } from "ioredis";
 import { env } from "../config/env";
+import { usesRedisTls } from "../config/redisConfig";
 
-export const redis: RedisClient = new Redis(env.redisUrl, {
+const redisOptions: RedisOptions = {
   maxRetriesPerRequest: 3,
   enableAutoPipelining: true,
   lazyConnect: env.nodeEnv === "test"
-});
+};
+
+if (usesRedisTls(env.redisUrl)) {
+  redisOptions.tls = {};
+}
+
+export const redis: RedisClient = new Redis(env.redisUrl, redisOptions);
 
 redis.on("error", (err) => {
   // eslint-disable-next-line no-console
