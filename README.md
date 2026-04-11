@@ -1,6 +1,6 @@
 # One-Tap Engine (OTP) Backend
 
-High-concurrency Fastify + Redis service for mass market application across many matches with idempotency, locking, and context-map validation.
+High-concurrency Fastify service with in-memory state for mass market application across many matches with idempotency, locking, and context-map validation.
 
 The One For All board is now hydrated from Highlightly football live and upcoming match data. The backend maps supported bookmaker odds into the internal selection model used by the frontend and sync engine.
 
@@ -8,7 +8,7 @@ This backend is standalone inside the `backend/` directory.
 
 ## Quick Start
 - Install deps: `npm install`
-- Copy `.env` (optional) or set vars: `PORT=3000`, `REDIS_URL=redis://localhost:6379`, `API_KEYS=local-dev-key`, `HIGHLIGHTLY_FOOTBALL_KEY=your-key`
+- Copy `.env` (optional) or set vars: `PORT=3000`, `API_KEYS=local-dev-key`, `HIGHLIGHTLY_FOOTBALL_KEY=your-key`
 - Dev server: `npm run dev`
 - Tests: `npm test`
 - Prod build: `npm run build && npm start`
@@ -17,12 +17,10 @@ This backend is standalone inside the `backend/` directory.
 ```
 docker-compose up --build
 ```
-App listens on `localhost:3000`, Redis on `localhost:6379`.
+App listens on `localhost:3000`.
 
 ## Environment Variables
 - `PORT` (default 3000)
-- `REDIS_URL` (e.g., `redis://redis:6379` locally, or your managed Redis / Render Key Value internal URL in production)
-- `REDIS_TLS_URL` optional fallback for providers that expose a dedicated TLS URL such as `rediss://...`
 - `API_KEYS` comma-separated list of allowed API keys
 - `RATE_LIMIT_PER_MINUTE` per API key (default 120)
 - `CONTEXT_CACHE_TTL_MS` LRU cache TTL for context-map (default 60000)
@@ -42,9 +40,8 @@ App listens on `localhost:3000`, Redis on `localhost:6379`.
 - Legacy `API_FOOTBALL_*` variables are still accepted as fallbacks.
 
 ## Render Deployment
-- Do not deploy with the local default `redis://localhost:6379`. In production, the server now fails fast if `REDIS_URL` is missing or still points to localhost.
-- Provision a managed Redis / Render Key Value instance and set `REDIS_URL` to its internal connection string.
-- If your provider only gives you a TLS URL, set `REDIS_TLS_URL=rediss://...` instead.
+- The backend no longer requires Redis to boot on Render.
+- Runtime state is stored in memory, so selections, locks, rate limits, and idempotency entries reset when the process restarts or a new instance is created.
 - `GET /health` is intentionally public so Render health checks can succeed without an API key.
 
 ## Endpoints
@@ -63,19 +60,19 @@ Apply a single market to many matches, respecting locks and context-map.
   "idempotency_key": "uuid-123"
 }
 ```
-Response includes `applied`, `skipped_locked`, `skipped_missing`, `updates`, and `server_state_version`. Requests with the same `idempotency_key` return the stored response (Redis key `otp:idem:{userId}:{key}`, TTL 10 minutes). Concurrent identical calls are guarded with `SET NX`.
+Response includes `applied`, `skipped_locked`, `skipped_missing`, `updates`, and `server_state_version`. Requests with the same `idempotency_key` return the stored response under `otp:idem:{userId}:{key}` with a 10 minute TTL. Concurrent identical calls are guarded with `SET NX`-style semantics.
 
 For standard markets, the backend now resolves the exact `selection_id` from the ingested `available_markets` catalog instead of only swapping `market_id`.
 
 For the proprietary football special, seed the context map with a market such as `OTS_BTIO_OVER_1_5`. The backend will combine `HOME_TOTAL_OVER_1_5` and `AWAY_TOTAL_OVER_1_5` from the ingested market catalog and return the synthetic special selection with its `combined_odds`.
 
 ### POST /v1/otp/dev/bootstrap
-Hydrates the One For All board from Highlightly football data and mirrors the result into Redis for the selected `user_id`.
+Hydrates the One For All board from Highlightly football data and mirrors the result into the in-memory backend store for the selected `user_id`.
 
 This endpoint currently populates football fixtures only. It preserves any previously synced selection for a match if that market is still available in the latest provider payload.
 
 ### POST /v1/otp/selections/ingest
-Ingest selection snapshots into Redis hash `otp:user:{userId}:selections`. Body:
+Ingest selection snapshots into the in-memory selection store. Body:
 ```json
 { "user_id": "u1", "selections": [ { "selection_id": "s1", "match_id": "m1", "sport_id": "football", "market_id": "OVER_1_5", "event_timestamp": 1700000000, "odds": 1.2, "isLocked": false, "updated_at": "2024-01-01T00:00:00Z" } ] }
 ```
@@ -102,19 +99,12 @@ Minimal demo using the worker thread (`odds.worker`) to compute `combinedOdds = 
 - `GET /health` -> `{ ok: true }`
 - `GET /metrics` -> basic counters.
 
-## Data Model (Redis)
+## Data Model (In Memory)
 - `otp:user:{userId}:selections` (hash) field=`matchId` value=`SelectionSnapshot JSON`
 - `otp:user:{userId}:selection-index` (hash) field=`selection_id` value=`matchId`
 - `otp:user:{userId}:locks` (set) members=`selection_id`
 - `otp:context-map` (hash) field=`{sportId}:{action}` value=`market_id`
 - `otp:idem:{userId}:{idempotencyKey}` (string) value=response JSON, TTL 10m
-
-## Seeding Context-Map
-```
-redis-cli -u $REDIS_URL HSET otp:context-map "football:SAFE_PLAY" "OVER_1_5"
-redis-cli -u $REDIS_URL HSET otp:context-map "basketball:FAST_PLAY" "OVER_200"
-```
-Cache refreshes automatically every 60s; restart is not required.
 
 ## Example cURL
 ```
@@ -125,12 +115,12 @@ curl -X POST http://localhost:3000/v1/otp/sync-selections \
 ```
 
 ## Performance Notes
-- Redis pipelines for batch reads/writes (selections + locks).
-- HMGET/HSET plus a Redis selection index for O(1) match and lock resolution.
+- In-memory pipelines for batch reads/writes (selections + locks).
+- HMGET/HSET-style helpers plus an in-memory selection index for O(1) match and lock resolution.
 - LRU cache for context-map (O(1) lookup after warm).
-- Idempotency uses `SET NX` to avoid double-processing and stores full response.
+- Idempotency uses `SET NX`-style semantics to avoid double-processing and stores full response.
 - Optional Node cluster for multi-core scaling (`CLUSTER_ENABLED=true`).
-- Simple Redis-backed per-API-key rate limiting.
+- Simple in-memory per-API-key rate limiting.
 
 ## Observability & Safety
 - Correlation/request IDs via `x-request-id` or generated UUID.

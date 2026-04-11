@@ -1,4 +1,4 @@
-import { redis, redisKeys } from "./redis";
+import { stateKeys, stateStore } from "./stateStore";
 import { env } from "../config/env";
 
 const PENDING = "__pending__";
@@ -8,17 +8,17 @@ export const withIdempotency = async <T>(
   key: string,
   compute: () => Promise<T>
 ): Promise<T> => {
-  const idemKey = redisKeys.idempotency(userId, key);
+  const idemKey = stateKeys.idempotency(userId, key);
 
-  const existing = await redis.get(idemKey);
+  const existing = await stateStore.get(idemKey);
   if (existing && existing !== PENDING) {
     return JSON.parse(existing) as T;
   }
 
-  const setResult = await redis.set(idemKey, PENDING, "EX", env.idempotencyTtlSec, "NX");
+  const setResult = await stateStore.set(idemKey, PENDING, "EX", env.idempotencyTtlSec, "NX");
   if (setResult === null) {
     // another request is processing or value exists; try to read again
-    const val = await redis.get(idemKey);
+    const val = await stateStore.get(idemKey);
     if (val && val !== PENDING) {
       return JSON.parse(val) as T;
     }
@@ -26,6 +26,6 @@ export const withIdempotency = async <T>(
   }
 
   const result = await compute();
-  await redis.set(idemKey, JSON.stringify(result), "EX", env.idempotencyTtlSec);
+  await stateStore.set(idemKey, JSON.stringify(result), "EX", env.idempotencyTtlSec);
   return result;
 };

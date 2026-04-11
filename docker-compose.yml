@@ -1,17 +1,9 @@
 version: "3.9"
 services:
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    command: ["redis-server", "--appendonly", "yes"]
   app:
     build: .
-    depends_on:
-      - redis
     environment:
       - PORT=3000
-      - REDIS_URL=redis://redis:6379
       - API_KEYS=local-dev-key
       - RATE_LIMIT_PER_MINUTE=200
     ports:

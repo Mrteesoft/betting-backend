@@ -1,9 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
-
-vi.mock("ioredis", async () => {
-  const RedisMock = (await import("ioredis-mock")).default;
-  return { __esModule: true, default: RedisMock };
-});
+import { describe, it, expect } from "vitest";
 
 import { setContextEntry, getMarketForContext, reloadContextCache } from "../src/services/contextMap";
 

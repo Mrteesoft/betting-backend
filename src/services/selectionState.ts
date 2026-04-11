@@ -1,4 +1,4 @@
-import { redis, redisKeys } from "./redis";
+import { stateKeys, stateStore } from "./stateStore";
 import { AvailableMarket, SelectionSnapshot } from "../types/otp";
 import { getTimeBucket } from "./timeBucket";
 
@@ -41,8 +41,8 @@ export const getSelectionsForMatches = async (
     return [];
   }
 
-  const key = redisKeys.selections(userId);
-  const results = await redis.hmget(key, ...matchIds);
+  const key = stateKeys.selections(userId);
+  const results = await stateStore.hmget(key, ...matchIds);
   return results.map((val) => {
     if (!val) return null;
     try {
@@ -58,8 +58,8 @@ export const ingestSelections = async (userId: string, snapshots: SelectionSnaps
     return 0;
   }
 
-  const key = redisKeys.selections(userId);
-  const indexKey = redisKeys.selectionIndex(userId);
+  const key = stateKeys.selections(userId);
+  const indexKey = stateKeys.selectionIndex(userId);
   const selectionArgs: string[] = [];
   const indexArgs: string[] = [];
 
@@ -73,16 +73,16 @@ export const ingestSelections = async (userId: string, snapshots: SelectionSnaps
   });
 
   await Promise.all([
-    redis.hset(key, ...selectionArgs),
-    indexArgs.length > 0 ? redis.hset(indexKey, ...indexArgs) : Promise.resolve(0)
+    stateStore.hset(key, ...selectionArgs),
+    indexArgs.length > 0 ? stateStore.hset(indexKey, ...indexArgs) : Promise.resolve(0)
   ]);
 
   return snapshots.length;
 };
 
 export const getAllSelections = async (userId: string): Promise<Record<string, SelectionSnapshot>> => {
-  const key = redisKeys.selections(userId);
-  const raw = await redis.hgetall(key);
+  const key = stateKeys.selections(userId);
+  const raw = await stateStore.hgetall(key);
   const result: Record<string, SelectionSnapshot> = {};
   Object.entries(raw).forEach(([matchId, payload]) => {
     try {
@@ -108,8 +108,8 @@ export const updateMarkets = async (
 ) => {
   if (updates.length === 0) return;
 
-  const key = redisKeys.selections(userId);
-  const indexKey = redisKeys.selectionIndex(userId);
+  const key = stateKeys.selections(userId);
+  const indexKey = stateKeys.selectionIndex(userId);
   const selectionArgs: string[] = [];
   const indexArgs: string[] = [];
 
@@ -127,8 +127,8 @@ export const updateMarkets = async (
   });
 
   await Promise.all([
-    redis.hset(key, ...selectionArgs),
-    indexArgs.length > 0 ? redis.hset(indexKey, ...indexArgs) : Promise.resolve(0)
+    stateStore.hset(key, ...selectionArgs),
+    indexArgs.length > 0 ? stateStore.hset(indexKey, ...indexArgs) : Promise.resolve(0)
   ]);
 };
 
@@ -137,34 +137,34 @@ export const getLocks = async (userId: string, selectionIds: string[]) => {
     return [];
   }
 
-  const key = redisKeys.locks(userId);
+  const key = stateKeys.locks(userId);
 
   try {
-    const res = await redis.call("SMISMEMBER", key, ...selectionIds);
+    const res = await stateStore.call("SMISMEMBER", key, ...selectionIds);
     if (Array.isArray(res)) {
       return res.map((value) => Number(value));
     }
   } catch {
-    // fall through to pipelined SISMEMBER for local mocks/older Redis versions
+    // Fall through to pipelined SISMEMBER for store implementations that do not expose SMISMEMBER.
   }
 
-  const pipe = redis.pipeline();
+  const pipe = stateStore.pipeline();
   selectionIds.forEach((id) => pipe.sismember(key, id));
   const res = await pipe.exec();
   return (res ?? []).map(([err, val]) => (err ? 0 : Number(val))) as number[];
 };
 
 const findMatchIdBySelectionId = async (userId: string, selectionId: string): Promise<string | null> => {
-  const indexed = await redis.hget(redisKeys.selectionIndex(userId), selectionId);
+  const indexed = await stateStore.hget(stateKeys.selectionIndex(userId), selectionId);
   if (indexed) {
     return indexed;
   }
 
-  const key = redisKeys.selections(userId);
+  const key = stateKeys.selections(userId);
   let cursor = "0";
   do {
     // eslint-disable-next-line no-await-in-loop
-    const [nextCursor, items] = await redis.hscan(key, cursor, "COUNT", 50);
+    const [nextCursor, items] = await stateStore.hscan(key, cursor, "COUNT", 50);
     for (let i = 0; i < items.length; i += 2) {
       const matchId = items[i];
       const payload = items[i + 1];
@@ -181,23 +181,23 @@ const findMatchIdBySelectionId = async (userId: string, selectionId: string): Pr
 };
 
 export const setLockState = async (userId: string, selectionId: string, locked: boolean) => {
-  const lockKey = redisKeys.locks(userId);
+  const lockKey = stateKeys.locks(userId);
   const actions = [];
   if (locked) {
-    actions.push(redis.sadd(lockKey, selectionId));
+    actions.push(stateStore.sadd(lockKey, selectionId));
   } else {
-    actions.push(redis.srem(lockKey, selectionId));
+    actions.push(stateStore.srem(lockKey, selectionId));
   }
 
   const matchId = await findMatchIdBySelectionId(userId, selectionId);
   if (matchId) {
-    const selKey = redisKeys.selections(userId);
-    const payload = await redis.hget(selKey, matchId);
+    const selKey = stateKeys.selections(userId);
+    const payload = await stateStore.hget(selKey, matchId);
     if (payload) {
       try {
         const snap = JSON.parse(payload) as SelectionSnapshot;
         const next = normaliseSnapshot({ ...snap, isLocked: locked, updated_at: new Date().toISOString() });
-        actions.push(redis.hset(selKey, matchId, JSON.stringify(next)));
+        actions.push(stateStore.hset(selKey, matchId, JSON.stringify(next)));
       } catch {
         // ignore parse failure
       }
