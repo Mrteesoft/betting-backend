@@ -1,284 +1,144 @@
 {
-  "savedAt": "2026-05-06T14:34:39.437Z",
+  "savedAt": "2026-07-06T10:12:19.797Z",
   "board": {
     "fixtures": [
       {
-        "match_id": "hl:1314090305",
+        "match_id": "hl:1299986682",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Hottin",
-        "away_team": "Horriya"
+        "home_team": "Bars",
+        "away_team": "Ilbirs"
       },
       {
-        "match_id": "hl:1290394210",
+        "match_id": "hl:1313598427",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Calvary",
-        "away_team": "Police"
+        "home_team": "Drukpa",
+        "away_team": "Thimphu"
       },
       {
-        "match_id": "hl:1290395061",
+        "match_id": "hl:1313599278",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Lugazi",
-        "away_team": "Mbarara City"
+        "home_team": "Paro",
+        "away_team": "Tensung"
       },
       {
-        "match_id": "hl:1314089454",
+        "match_id": "hl:1300018169",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Jaish",
-        "away_team": "Al Wahda FC"
+        "home_team": "Asiagoal",
+        "away_team": "Bars"
       },
       {
-        "match_id": "hl:1251642223",
-        "sport_id": "football",
-        "league": "FKF Premier League",
-        "home_team": "Nairobi United",
-        "away_team": "Tusker"
-      },
-      {
-        "match_id": "hl:1314157534",
+        "match_id": "hl:1300015616",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Khan Shaykhun Sc",
-        "away_team": "Al Shouleh"
+        "home_team": "Ilbirs",
+        "away_team": "Ozgon"
       },
       {
-        "match_id": "hl:1300367930",
+        "match_id": "hl:1300016467",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Kaisar",
-        "away_team": "Kairat Almaty"
+        "home_team": "Kara-Balta",
+        "away_team": "Talant"
       },
       {
-        "match_id": "hl:1221741487",
-        "sport_id": "football",
-        "league": "Taiwan Football Premier League",
-        "home_team": "Tainan City",
-        "away_team": "Hang Yuen"
-      },
-      {
-        "match_id": "hl:1286786821",
+        "match_id": "hl:1300020722",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Tabankulu",
-        "away_team": "Highlanders"
+        "home_team": "Asia Talas",
+        "away_team": "Abdish-Ata"
       },
       {
-        "match_id": "hl:1286785119",
+        "match_id": "hl:1300021573",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Manzini Sea Birds",
-        "away_team": "Mbabane Swallows FC"
+        "home_team": "Bishkek City",
+        "away_team": "Muras United"
       },
       {
-        "match_id": "hl:1294370082",
+        "match_id": "hl:1300019020",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Gandzasar",
-        "away_team": "Artsakh"
+        "home_team": "Neftchi",
+        "away_team": "OshMU Aldier"
       },
       {
-        "match_id": "hl:1311429228",
+        "match_id": "hl:1300017318",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Welwalo Adigrat Uni",
-        "away_team": "Negelle Arsi"
+        "home_team": "Alay",
+        "away_team": "Toktogul"
       },
       {
-        "match_id": "hl:1294368380",
+        "match_id": "hl:1300019871",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Ararat-Armenia",
-        "away_team": "Pyunik Yerevan"
+        "home_team": "Alga",
+        "away_team": "Dordoi Bishkek"
       },
       {
-        "match_id": "hl:1249895120",
+        "match_id": "hl:1313600129",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Bibiani Goldstars",
-        "away_team": "Samartex"
+        "home_team": "Transport United",
+        "away_team": "Bhutan U19"
       },
       {
-        "match_id": "hl:1249895971",
+        "match_id": "hl:1311769628",
         "sport_id": "football",
-        "league": "Premier League",
-        "home_team": "Bechem United",
-        "away_team": "Dreams"
+        "league": "Victoria Premier League 2",
+        "home_team": "Keilor Park",
+        "away_team": "Malvern"
       },
       {
-        "match_id": "hl:1249900226",
+        "match_id": "hl:1311664955",
         "sport_id": "football",
-        "league": "Premier League",
-        "home_team": "Hearts of Oak",
-        "away_team": "Karela"
+        "league": "Victoria Premier League 2",
+        "home_team": "Eastern Lions",
+        "away_team": "Werribee City"
       },
       {
-        "match_id": "hl:1249894269",
+        "match_id": "hl:1311700697",
         "sport_id": "football",
-        "league": "Premier League",
-        "home_team": "Berekum Chelsea",
-        "away_team": "Medeama"
+        "league": "Victoria Premier League 2",
+        "home_team": "Essendon Royals Sc",
+        "away_team": "Box Hill"
       },
       {
-        "match_id": "hl:1249901077",
+        "match_id": "hl:1297115408",
+        "sport_id": "football",
+        "league": "Queensland Premier League",
+        "home_team": "Holland Park Hawks",
+        "away_team": "North Star"
+      },
+      {
+        "match_id": "hl:1311770479",
+        "sport_id": "football",
+        "league": "Victoria Premier League 2",
+        "home_team": "Whittlesea United",
+        "away_team": "Kingston City"
+      },
+      {
+        "match_id": "hl:1298560406",
         "sport_id": "football",
         "league": "Premier League",
-        "home_team": "Basake Holy Stars",
-        "away_team": "Aduana Stars"
+        "home_team": "FC Dnepr Mogilev",
+        "away_team": "FC Minsk"
       }
     ],
     "selections": [
       {
-        "selection_id": "hl:1314090305:MATCH_INFO",
-        "match_id": "hl:1314090305",
+        "selection_id": "hl:1299986682:MATCH_INFO",
+        "match_id": "hl:1299986682",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
+        "event_timestamp": 1783346400,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
-        "available_markets": {},
-        "score": {
-          "home": 0,
-          "away": 2
-        },
-        "special_selection": null,
-        "status_short": "2H",
-        "status_label": "66'",
-        "is_live": true,
-        "provider": "highlightly"
-      },
-      {
-        "selection_id": "hl:1290394210:MATCH_INFO",
-        "match_id": "hl:1290394210",
-        "sport_id": "football",
-        "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
-        "odds": 0,
-        "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
-        "available_markets": {},
-        "score": {
-          "home": 0,
-          "away": 0
-        },
-        "special_selection": null,
-        "status_short": "2H",
-        "status_label": "77'",
-        "is_live": true,
-        "provider": "highlightly"
-      },
-      {
-        "selection_id": "hl:1290395061:MATCH_INFO",
-        "match_id": "hl:1290395061",
-        "sport_id": "football",
-        "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
-        "odds": 0,
-        "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
-        "available_markets": {},
-        "score": {
-          "home": 0,
-          "away": 1
-        },
-        "special_selection": null,
-        "status_short": "2H",
-        "status_label": "77'",
-        "is_live": true,
-        "provider": "highlightly"
-      },
-      {
-        "selection_id": "hl:1314089454:MATCH_INFO",
-        "match_id": "hl:1314089454",
-        "sport_id": "football",
-        "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
-        "odds": 0,
-        "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
-        "available_markets": {},
-        "score": {
-          "home": 0,
-          "away": 1
-        },
-        "special_selection": null,
-        "status_short": "2H",
-        "status_label": "65'",
-        "is_live": true,
-        "provider": "highlightly"
-      },
-      {
-        "selection_id": "hl:1251642223:MATCH_INFO",
-        "match_id": "hl:1251642223",
-        "sport_id": "football",
-        "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
-        "odds": 0,
-        "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
-        "available_markets": {},
-        "score": {
-          "home": 1,
-          "away": 0
-        },
-        "special_selection": null,
-        "status_short": "2H",
-        "status_label": "74'",
-        "is_live": true,
-        "provider": "highlightly"
-      },
-      {
-        "selection_id": "hl:1314157534:MATCH_INFO",
-        "match_id": "hl:1314157534",
-        "sport_id": "football",
-        "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
-        "odds": 0,
-        "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
-        "available_markets": {},
-        "score": {
-          "home": 2,
-          "away": 1
-        },
-        "special_selection": null,
-        "status_short": "2H",
-        "status_label": "70'",
-        "is_live": true,
-        "provider": "highlightly"
-      },
-      {
-        "selection_id": "hl:1300367930:MATCH_INFO",
-        "match_id": "hl:1300367930",
-        "sport_id": "football",
-        "market_id": "MATCH_INFO",
-        "event_timestamp": 1778076000,
-        "odds": 0,
-        "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
-        "available_markets": {},
-        "score": {
-          "home": 0,
-          "away": 1
-        },
-        "special_selection": null,
-        "status_short": "1H",
-        "status_label": "32'",
-        "is_live": true,
-        "provider": "highlightly"
-      },
-      {
-        "selection_id": "hl:1221741487:MATCH_INFO",
-        "match_id": "hl:1221741487",
-        "sport_id": "football",
-        "market_id": "MATCH_INFO",
-        "event_timestamp": 1778059800,
-        "odds": 0,
-        "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -287,14 +147,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1286786821:MATCH_INFO",
-        "match_id": "hl:1286786821",
+        "selection_id": "hl:1313598427:MATCH_INFO",
+        "match_id": "hl:1313598427",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
+        "event_timestamp": 1783425600,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -303,14 +163,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1286785119:MATCH_INFO",
-        "match_id": "hl:1286785119",
+        "selection_id": "hl:1313599278:MATCH_INFO",
+        "match_id": "hl:1313599278",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778072400,
+        "event_timestamp": 1783504800,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -319,14 +179,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1294370082:MATCH_INFO",
-        "match_id": "hl:1294370082",
+        "selection_id": "hl:1300018169:MATCH_INFO",
+        "match_id": "hl:1300018169",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783519200,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -335,14 +195,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1311429228:MATCH_INFO",
-        "match_id": "hl:1311429228",
+        "selection_id": "hl:1300015616:MATCH_INFO",
+        "match_id": "hl:1300015616",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783519200,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -351,14 +211,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1294368380:MATCH_INFO",
-        "match_id": "hl:1294368380",
+        "selection_id": "hl:1300016467:MATCH_INFO",
+        "match_id": "hl:1300016467",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783519200,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -367,14 +227,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1249895120:MATCH_INFO",
-        "match_id": "hl:1249895120",
+        "selection_id": "hl:1300020722:MATCH_INFO",
+        "match_id": "hl:1300020722",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783519200,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -383,14 +243,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1249895971:MATCH_INFO",
-        "match_id": "hl:1249895971",
+        "selection_id": "hl:1300021573:MATCH_INFO",
+        "match_id": "hl:1300021573",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783519200,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -399,14 +259,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1249900226:MATCH_INFO",
-        "match_id": "hl:1249900226",
+        "selection_id": "hl:1300019020:MATCH_INFO",
+        "match_id": "hl:1300019020",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783519200,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -415,14 +275,14 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1249894269:MATCH_INFO",
-        "match_id": "hl:1249894269",
+        "selection_id": "hl:1300017318:MATCH_INFO",
+        "match_id": "hl:1300017318",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783519200,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
@@ -431,14 +291,126 @@
         "provider": "highlightly"
       },
       {
-        "selection_id": "hl:1249901077:MATCH_INFO",
-        "match_id": "hl:1249901077",
+        "selection_id": "hl:1300019871:MATCH_INFO",
+        "match_id": "hl:1300019871",
         "sport_id": "football",
         "market_id": "MATCH_INFO",
-        "event_timestamp": 1778079600,
+        "event_timestamp": 1783521000,
         "odds": 0,
         "isLocked": false,
-        "updated_at": "2026-05-06T14:34:39.437Z",
+        "updated_at": "2026-07-06T10:12:19.795Z",
+        "available_markets": {},
+        "special_selection": null,
+        "status_short": "NS",
+        "status_label": "Not started",
+        "is_live": false,
+        "provider": "highlightly"
+      },
+      {
+        "selection_id": "hl:1313600129:MATCH_INFO",
+        "match_id": "hl:1313600129",
+        "sport_id": "football",
+        "market_id": "MATCH_INFO",
+        "event_timestamp": 1783598400,
+        "odds": 0,
+        "isLocked": false,
+        "updated_at": "2026-07-06T10:12:19.795Z",
+        "available_markets": {},
+        "special_selection": null,
+        "status_short": "NS",
+        "status_label": "Not started",
+        "is_live": false,
+        "provider": "highlightly"
+      },
+      {
+        "selection_id": "hl:1311769628:MATCH_INFO",
+        "match_id": "hl:1311769628",
+        "sport_id": "football",
+        "market_id": "MATCH_INFO",
+        "event_timestamp": 1783675800,
+        "odds": 0,
+        "isLocked": false,
+        "updated_at": "2026-07-06T10:12:19.795Z",
+        "available_markets": {},
+        "special_selection": null,
+        "status_short": "NS",
+        "status_label": "Not started",
+        "is_live": false,
+        "provider": "highlightly"
+      },
+      {
+        "selection_id": "hl:1311664955:MATCH_INFO",
+        "match_id": "hl:1311664955",
+        "sport_id": "football",
+        "market_id": "MATCH_INFO",
+        "event_timestamp": 1783676700,
+        "odds": 0,
+        "isLocked": false,
+        "updated_at": "2026-07-06T10:12:19.795Z",
+        "available_markets": {},
+        "special_selection": null,
+        "status_short": "NS",
+        "status_label": "Not started",
+        "is_live": false,
+        "provider": "highlightly"
+      },
+      {
+        "selection_id": "hl:1311700697:MATCH_INFO",
+        "match_id": "hl:1311700697",
+        "sport_id": "football",
+        "market_id": "MATCH_INFO",
+        "event_timestamp": 1783679400,
+        "odds": 0,
+        "isLocked": false,
+        "updated_at": "2026-07-06T10:12:19.795Z",
+        "available_markets": {},
+        "special_selection": null,
+        "status_short": "NS",
+        "status_label": "Not started",
+        "is_live": false,
+        "provider": "highlightly"
+      },
+      {
+        "selection_id": "hl:1297115408:MATCH_INFO",
+        "match_id": "hl:1297115408",
+        "sport_id": "football",
+        "market_id": "MATCH_INFO",
+        "event_timestamp": 1783679400,
+        "odds": 0,
+        "isLocked": false,
+        "updated_at": "2026-07-06T10:12:19.795Z",
+        "available_markets": {},
+        "special_selection": null,
+        "status_short": "NS",
+        "status_label": "Not started",
+        "is_live": false,
+        "provider": "highlightly"
+      },
+      {
+        "selection_id": "hl:1311770479:MATCH_INFO",
+        "match_id": "hl:1311770479",
+        "sport_id": "football",
+        "market_id": "MATCH_INFO",
+        "event_timestamp": 1783679400,
+        "odds": 0,
+        "isLocked": false,
+        "updated_at": "2026-07-06T10:12:19.795Z",
+        "available_markets": {},
+        "special_selection": null,
+        "status_short": "NS",
+        "status_label": "Not started",
+        "is_live": false,
+        "provider": "highlightly"
+      },
+      {
+        "selection_id": "hl:1298560406:MATCH_INFO",
+        "match_id": "hl:1298560406",
+        "sport_id": "football",
+        "market_id": "MATCH_INFO",
+        "event_timestamp": 1783697400,
+        "odds": 0,
+        "isLocked": false,
+        "updated_at": "2026-07-06T10:12:19.795Z",
         "available_markets": {},
         "special_selection": null,
         "status_short": "NS",
