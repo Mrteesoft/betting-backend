@@ -1,3 +1,6 @@
+import { advanceMockOdds } from "./services/mockOdds";
+import { serialize } from "./services/serial";
+import { evaluateAutoBetRules } from "./services/autoBetRules";
 import Fastify from "fastify";
 import helmet from "@fastify/helmet";
 import formbody from "@fastify/formbody";
@@ -11,6 +14,7 @@ import selectMarketRoute from "./routes/selectMarket.route";
 import selectionsRoute from "./routes/selections.route";
 import locksRoute from "./routes/locks.route";
 import demoRoute from "./routes/demo.route";
+import integrationRoute from "./routes/integration.route";
 import { checkRateLimit } from "./services/rateLimit";
 
 const logger = pino({
@@ -40,7 +44,8 @@ app.addHook("onRequest", async (request, reply) => {
   if (pathname === "/health") {
     return;
   }
-  const apiKey = request.headers["x-api-key"] as string | undefined;
+  const apiKey = (request.headers["x-api-key"] as string | undefined) ||
+    ((request.query as { api_key?: string } | undefined)?.api_key);
   if (!apiKey || !env.apiKeys.includes(apiKey)) {
     reply.code(401).send({ error: "Unauthorized" });
     return;
@@ -54,7 +59,7 @@ app.addHook("onResponse", async (request, reply) => {
   metrics.requests += 1;
   app.log.info({
     msg: "request_complete",
-    route: request.routerPath,
+    route: request.routeOptions.url,
     statusCode: reply.statusCode,
     latencyMs,
     requestId: request.id
@@ -71,6 +76,18 @@ app.register(selectMarketRoute);
 app.register(selectionsRoute);
 app.register(locksRoute);
 app.register(demoRoute);
+app.register(integrationRoute);
+let mockOddsTimer: ReturnType<typeof setInterval> | undefined;
+let autoBetTimer: ReturnType<typeof setInterval> | undefined;
+app.addHook("onReady", async () => {
+  autoBetTimer = setInterval(() => { void evaluateAutoBetRules().catch(error => app.log.error(error)); }, 2000);
+  autoBetTimer.unref();
+  if (env.nodeEnv !== "test" && process.env.OTP_MOCK_ODDS_ENABLED !== "false") {
+    mockOddsTimer = setInterval(() => { void serialize(advanceMockOdds).then(evaluateAutoBetRules).catch(error => app.log.error(error)); }, 8000);
+    mockOddsTimer.unref();
+  }
+});
+app.addHook("onClose", async () => { if (autoBetTimer) clearInterval(autoBetTimer); if (mockOddsTimer) clearInterval(mockOddsTimer); });
 
 app.setErrorHandler((error, request, reply) => {
   const status = (error as any).statusCode || 500;

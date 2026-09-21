@@ -16,3 +16,6 @@ pnpm-debug.log*
 
 .DS_Store
 Thumbs.db
+
+data/*.json
+data/*.tmp

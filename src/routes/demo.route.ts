@@ -1,3 +1,4 @@
+import { registerMockUser } from "../services/mockOdds";
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { setContextEntry } from "../services/contextMap";
@@ -8,27 +9,11 @@ import {
   resolveOneTapSpecialSelection
 } from "../services/oneTapSpecial";
 import { getAllSelections, ingestSelections } from "../services/selectionState";
+import { createPrototypeBoard, prototypeSportActions } from "../services/prototypeBoard";
 
 const footballSpecialMarket = buildOneTapSpecialMarketId(1.5);
 
-const sportActions = {
-  football: [
-    {
-      action: "SOLOMON_SPECIAL",
-      target_market: footballSpecialMarket,
-      label: "Home & Away Over 1.5",
-      description: "Builds a synthetic football prop from the home and away team total markets.",
-      prominence: "featured"
-    },
-    {
-      action: "SAFE_PLAY",
-      target_market: "MATCH_WINNER_HOME",
-      label: "Safe Play",
-      description: "Maps one tap to the home win price for supported fixtures.",
-      prominence: "secondary"
-    }
-  ]
-} as const;
+const sportActions = prototypeSportActions;
 
 const savedDemoFixtures: Record<string, BoardFixture> = {
   "match-ars-che": {
@@ -93,7 +78,8 @@ const supportsActionTarget = (targetMarket: string, selection: Awaited<ReturnTyp
 export default async function demoRoute(app: FastifyInstance) {
   app.post("/v1/otp/dev/bootstrap", async (request, reply) => {
     const schema = z.object({
-      user_id: z.string().min(1).default("demo-user")
+      user_id: z.string().min(1).default("demo-user"),
+      provider: z.enum(["prototype", "live"]).default("prototype")
     });
     const parsed = schema.safeParse(request.body ?? {});
     if (!parsed.success) {
@@ -112,6 +98,18 @@ export default async function demoRoute(app: FastifyInstance) {
       marketId: footballSpecialMarket
     });
 
+    for (const [sportId, actions] of Object.entries(sportActions)) {
+      for (const action of actions) await setContextEntry({ sportId, action: action.action, marketId: action.target_market });
+    }
+    const existing = await getAllSelections(parsed.data.user_id);
+    const { fixtures: prototypeFixtures, selections: prototypeSelections } = createPrototypeBoard();
+    if (parsed.data.provider === "prototype") {
+      registerMockUser(parsed.data.user_id);
+      await ingestSelections(parsed.data.user_id, prototypeSelections.map(selection => mergeSelectionSnapshot(selection, existing[selection.match_id])));
+      reply.send({ ok: true, user_id: parsed.data.user_id, fixtures: prototypeFixtures, selections: await getAllSelections(parsed.data.user_id), sport_actions: sportActions, source: "prototype" });
+      return;
+    }
+
     const existingSelections = await getAllSelections(parsed.data.user_id);
 
     try {
@@ -119,6 +117,9 @@ export default async function demoRoute(app: FastifyInstance) {
       const mergedSelections = board.selections.map((selection) =>
         mergeSelectionSnapshot(selection, existingSelections[selection.match_id])
       );
+      if (!mergedSelections.some((selection) => selection.odds >= 1.01 && Object.keys(selection.available_markets ?? {}).length > 0)) {
+        throw Object.assign(new Error("Provider returned fixtures without bettable odds"), { statusCode: 503 });
+      }
       const availableSportActions = {
         football: sportActions.football.filter((action) =>
           mergedSelections.some((selection) => supportsActionTarget(action.target_market, selection))
@@ -136,7 +137,7 @@ export default async function demoRoute(app: FastifyInstance) {
         sport_actions: availableSportActions
       });
     } catch (error) {
-      if (Object.keys(existingSelections).length > 0) {
+      if (Object.values(existingSelections).some((selection) => selection.odds >= 1.01)) {
         const fallbackSelections = existingSelections;
         const fallbackFixtures = Object.values(fallbackSelections)
           .map((selection) => savedDemoFixtures[selection.match_id])
@@ -156,17 +157,8 @@ export default async function demoRoute(app: FastifyInstance) {
         });
         return;
       }
-
-      const statusCode =
-        typeof error === "object" &&
-        error !== null &&
-        "statusCode" in error &&
-        typeof (error as { statusCode?: unknown }).statusCode === "number"
-          ? (error as { statusCode: number }).statusCode
-          : 500;
-      const message = error instanceof Error ? error.message : "Unable to load the Highlightly football board.";
-
-      reply.code(statusCode).send({ error: message });
+      await ingestSelections(parsed.data.user_id, prototypeSelections);
+      reply.send({ ok: true, user_id: parsed.data.user_id, fixtures: prototypeFixtures, selections: await getAllSelections(parsed.data.user_id), sport_actions: sportActions, source: "prototype", provider_error: error instanceof Error ? error.message : "Provider unavailable" });
     }
   });
 }

@@ -2,13 +2,13 @@
 
 High-concurrency Fastify service with in-memory state for mass market application across many matches with idempotency, locking, and context-map validation.
 
-The One For All board is now hydrated from Highlightly football live and upcoming match data. The backend maps supported bookmaker odds into the internal selection model used by the frontend and sync engine.
+The default board is populated by the backend with 26 mock fixtures across football, basketball and tennis, 8 leagues and 290 market prices. Dates are generated relative to the bootstrap request. A separate `provider: "live"` bootstrap option retains the existing Highlightly integration.
 
-This backend is standalone inside the `backend/` directory.
+Bets use the simulated `qaxiom-prototype` adapter. No money is deposited or wagered.
 
 ## Quick Start
 - Install deps: `npm install`
-- Copy `.env` (optional) or set vars: `PORT=3000`, `API_KEYS=local-dev-key`, `HIGHLIGHTLY_FOOTBALL_KEY=your-key`
+- Copy `.env.example` to `.env`, or set `PORT=3000` and `API_KEYS=local-dev-key`. Mock mode requires no provider credentials.
 - Dev server: `npm run dev`
 - Tests: `npm test`
 - Prod build: `npm run build && npm start`
@@ -128,3 +128,45 @@ curl -X POST http://localhost:3000/v1/otp/sync-selections \
 - API key auth + per-key rate limiting.
 - Rejects large batches (`match_ids` > 500) with 413.
 # betting-backend
+
+## Mock betting API
+
+All routes below require `x-api-key`. `user_id` identifies a demo profile; this is a prototype API rather than an end-user bearer-auth wallet.
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| POST | `/v1/otp/dev/bootstrap` | Seed or refresh a board; body: `{ "user_id": "demo-user", "provider": "prototype" }` |
+| GET | `/v1/otp/events?user_id=demo-user` | Current event snapshots |
+| POST | `/v1/otp/auto-market` | Recommend markets within an odds range |
+| POST | `/v1/otp/bets` | Validate and place a simulated bet |
+| GET | `/v1/otp/bets?user_id=demo-user` | Receipts scoped to the demo user |
+| POST | `/v1/otp/auto-bet` | Select markets and place immediately |
+| POST | `/v1/otp/auto-bet/rules` | Arm a target-odds instruction |
+| GET | `/v1/otp/auto-bet/rules?user_id=demo-user` | Inspect rules |
+| DELETE | `/v1/otp/auto-bet/rules/:id?user_id=demo-user` | Cancel an armed rule |
+| GET | `/v1/otp/realtime/odds?user_id=demo-user&api_key=local-dev-key` | User-scoped SSE updates |
+| POST | `/v1/otp/odds/publish` | Publish a mock market update and evaluate rules |
+
+Placement body:
+
+```json
+{
+  "user_id": "demo-user",
+  "sportsbook": "qaxiom-prototype",
+  "match_ids": ["match-ars-che"],
+  "stake": 1000,
+  "currency": "NGN",
+  "bet_type": "multiple",
+  "idempotency_key": "unique-request-001"
+}
+```
+
+`bet_type` is `single`, `multiple` or `system`. Single divides the total stake across selections. System requires at least three matches and divides total stake across all doubles (2/N). Multiple is an accumulator. Placement rejects missing or duplicate matches, locked selections, invalid stake and odds beyond the configured request limit. Concurrent idempotency replays return the same receipt within one process.
+
+Auto Bet rules accept `user_id`, `match_ids`, `stake`, `target_combined_odds`, and `valid_hours` (1–168). They bind to the selected markets and execute at most once when the combined odds reach the target. Expiry and cancellation prevent subsequent execution. Saved selection snapshots allow pending rules to resume after process restart.
+
+Mock prices move within six percent of seed prices every eight seconds for recently bootstrapped users and users with armed rules. Set `OTP_MOCK_ODDS_ENABLED=false` for deterministic manual testing. Publish a price with `user_id`, `match_id`, `selection_id`, `odds` and optional `suspended`.
+
+Receipts and placement idempotency are stored in `OTP_DATA_FILE` (default `data/qaxiom-state.json`). Rules use `OTP_AUTO_BET_FILE` (default `data/auto-bet-rules.json`). These files are ignored by Git. Use a writable persistent directory and one process (`CLUSTER_ENABLED=false`) for this file-backed demo. Board selections and locks remain in memory; pending rules retain their saved snapshots. A shared transactional store is required before running multiple instances against these files.
+
+Validation: `npm run build`, `npm run lint`, and `npm test`. The integration tests cover all-sport bootstrap, market edits, locks, distinct bet pricing, concurrent retries, scoped history, target execution and cancellation.
